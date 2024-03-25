@@ -5,7 +5,6 @@ import {
   ERROR,
   GREEN_LIGHT,
   GREEN_REGULAR,
-  //   GREEN_LIGHT, GREEN_REGULAR, GREEN_TEXT, CONTRAST_LIGHT, CONTRAST_DARK, BACKGROUND_LIGHT, GREEN_DARK, ERROR, ERROR_DARK,
   GREEN_TEXT,
 } from "./constants"
 
@@ -36,7 +35,8 @@ const theme = createTheme({
   },
   breakpoints: {
     values: {
-      sm: 375,
+      mobile: 576,
+      tablet: 768,
     },
   },
   components: {

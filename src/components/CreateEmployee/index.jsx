@@ -9,8 +9,9 @@ import {
 } from "@mui/material"
 import { DatePicker } from "@mui/x-date-pickers"
 import { useState } from "react"
-import { departments, states } from "../assets/dropDownLists.json"
-import { GREEN_DARK, GREEN_LIGHT } from "../styles/constants"
+import { departments, states } from "../../assets/dropDownLists.json"
+
+import styles from "./styles"
 
 const CreateEmployee = () => {
   const [employee, setEmployee] = useState({})
@@ -18,46 +19,34 @@ const CreateEmployee = () => {
     event.preventDefault()
     setEmployee(null)
   }
-  console.log(typeof states)
   return (
-    <Stack sx={{ display: "grid" }}>
+    <Stack sx={styles}>
       <Typography variant="h2">Create Employee</Typography>
-      <Box sx={{ maxWidth: 500, justifySelf: "center" }}>
+      <Box className="form-container">
         <form onSubmit={handleSubmit}>
           <TextField
-            sx={{ width: "50%" }}
+            className="expansible50"
             required
             id="firstName"
             label="First Name"
             value={employee.firstName}
           />
           <TextField
-            sx={{ width: "50%" }}
+            className="expansible50"
             required
             id="lastName"
             label="Last Name"
             value={employee.lastName}
           />
-          <Box sx={{ display: "flex", alignItems: "center", paddingLeft: 3 }}>
-            <InputLabel sx={{ fontWeight: 700, width: "30%" }}>
+          <Box className="datePickerBox">
+            <InputLabel className="form-label collapsible30">
               Date of Birth :
             </InputLabel>
-            <DatePicker
-              sx={{ justifySelf: "flex-end", width: "70%" }}
-              defaultValue={new Date()}
-            />
+            <DatePicker className="collapsible70" defaultValue={new Date()} />
           </Box>
-          <Box
-            component="fieldset"
-            sx={{
-              marginBottom: 3,
-              color: GREEN_DARK,
-              border: `1px solid ${GREEN_LIGHT}`,
-              borderRadius: "5px",
-            }}
-          >
+          <Box component="fieldset" className="subCategoryFields">
             <legend>
-              <Typography fontWeight={700}>Address</Typography>
+              <Typography className="form-label">Address</Typography>
             </legend>
             <TextField
               required
@@ -93,26 +82,25 @@ const CreateEmployee = () => {
               // value={employee.address.zipcode}
             />
           </Box>
-          <Box sx={{ display: "flex", alignItems: "center" }}>
-            <InputLabel sx={{ width: "30%", fontWeight: 700 }}>
+          <Box className="datePickerBox">
+            <InputLabel className="form-label collapsible30">
               Start Date :
             </InputLabel>
-            <DatePicker sx={{ width: "40%" }} defaultValue={new Date()} />
-            <Autocomplete
-              sx={{ width: "60%" }}
-              options={departments}
-              disablePortal
-              id="department"
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  label="Department"
-                  required
-                  value={employee.department}
-                />
-              )}
-            />
+            <DatePicker className="collapsible70" defaultValue={new Date()} />
           </Box>
+          <Autocomplete
+            options={departments}
+            disablePortal
+            id="department"
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="Department"
+                required
+                value={employee.department}
+              />
+            )}
+          />
         </form>
       </Box>
       <Button>Save</Button>
