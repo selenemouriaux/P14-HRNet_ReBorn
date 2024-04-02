@@ -6,19 +6,34 @@ import {
   Stack,
   TextField,
   Typography,
-} from "@mui/material";
-import { DatePicker } from "@mui/x-date-pickers";
-import { useState } from "react";
-import { departments, states } from "../../assets/lists.json";
+} from "@mui/material"
+import { DatePicker } from "@mui/x-date-pickers"
+import { useDispatch } from "react-redux"
+import { departments, states } from "../../assets/lists.json"
+import { addEmployee } from "../../employeesSlice"
 
-import styles from "./styles";
+import styles from "./styles"
 
 const CreateEmployee = () => {
-  const [employee, setEmployee] = useState({});
+  const dispatch = useDispatch()
+
   const handleSubmit = (event) => {
-    event.preventDefault();
-    setEmployee(null);
-  };
+    event.preventDefault()
+    const formData = new FormData(event.target)
+    const newUser = {
+      firstName: formData.get("firstName"),
+      lastName: formData.get("lastName"),
+      startDate: formData.get("startDate"),
+      department: formData.get("department"),
+      dateOfBirth: formData.get("dateOfBirth"),
+      street: formData.get("street"),
+      city: formData.get("city"),
+      state: formData.get("state"),
+      zipCode: formData.get("zipCode"),
+    }
+    dispatch(addEmployee(newUser))
+    event.target.reset()
+  }
   return (
     <Stack sx={styles}>
       <Typography variant="h2">Create Employee</Typography>
@@ -27,85 +42,68 @@ const CreateEmployee = () => {
           <TextField
             className="expansible50"
             required
-            id="firstName"
+            name="firstName"
             label="First Name"
-            value={employee.firstName}
           />
           <TextField
             className="expansible50"
             required
-            id="lastName"
+            name="lastName"
             label="Last Name"
-            value={employee.lastName}
           />
           <Box className="datePickerBox">
             <InputLabel className="form-label collapsible30">
               Date of Birth :
             </InputLabel>
-            <DatePicker className="collapsible70" defaultValue={new Date()} />
+            <DatePicker
+              className="collapsible70"
+              name="dateOfBirth"
+              defaultValue={new Date()}
+            />
           </Box>
           <Box component="fieldset" className="subCategoryFields">
             <legend>
               <Typography className="form-label">Address</Typography>
             </legend>
-            <TextField
-              required
-              id="street"
-              label="Street"
-              // value={employee.address.street}
-            />
-            <TextField
-              required
-              id="city"
-              label="City"
-              // value={employee.address.city}
-            />
+            <TextField required name="street" label="Street" />
+            <TextField required name="city" label="City" />
             <Autocomplete
               options={states}
               disablePortal
               getOptionLabel={(option) => option.name}
-              id="state"
               renderInput={(params) => (
-                <TextField
-                  {...params}
-                  label="State"
-                  required
-                  // value={employee.address.state}
-                />
+                <TextField {...params} name="state" label="State" required />
               )}
             />
-            <TextField
-              type="number"
-              required
-              id="zipCode"
-              label="Zip Code"
-              // value={employee.address.zipcode}
-            />
+            <TextField type="number" required name="zipCode" label="Zip Code" />
           </Box>
           <Box className="datePickerBox">
             <InputLabel className="form-label collapsible30">
               Start Date :
             </InputLabel>
-            <DatePicker className="collapsible70" defaultValue={new Date()} />
+            <DatePicker
+              className="collapsible70"
+              name="startDate"
+              defaultValue={new Date()}
+            />
           </Box>
           <Autocomplete
             options={departments}
             disablePortal
-            id="department"
             renderInput={(params) => (
               <TextField
                 {...params}
+                name="department"
                 label="Department"
                 required
-                value={employee.department}
               />
             )}
           />
+          <Button type="submit">Save</Button>
         </form>
       </Box>
-      <Button>Save</Button>
     </Stack>
-  );
-};
+  )
+}
 
-export default CreateEmployee;
+export default CreateEmployee

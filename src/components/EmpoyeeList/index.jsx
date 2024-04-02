@@ -1,14 +1,16 @@
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
-import { users } from "../../assets/lists.json";
-import styles from "./styles";
-import { Stack, Typography } from "@mui/material";
+import Table from "@mui/material/Table"
+import TableBody from "@mui/material/TableBody"
+import TableCell from "@mui/material/TableCell"
+import TableContainer from "@mui/material/TableContainer"
+import TableHead from "@mui/material/TableHead"
+import TableRow from "@mui/material/TableRow"
+import { Stack, Typography } from "@mui/material"
+import { useSelector } from "react-redux"
+import styles from "./styles"
 
 const EmployeesList = () => {
+  const employeesList = useSelector((state) => state.employeesList)
+  console.log(employeesList)
   return (
     <Stack sx={styles}>
       <Typography variant="h2">Current Employees</Typography>
@@ -28,7 +30,7 @@ const EmployeesList = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {users.map((row) => (
+            {employeesList.map((row) => (
               <TableRow
                 key={row.id}
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
@@ -48,7 +50,7 @@ const EmployeesList = () => {
         </Table>
       </TableContainer>
     </Stack>
-  );
-};
+  )
+}
 
-export default EmployeesList;
+export default EmployeesList
