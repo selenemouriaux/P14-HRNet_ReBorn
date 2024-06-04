@@ -2,6 +2,7 @@ import {
   Autocomplete,
   Box,
   Button,
+  Dialog,
   InputLabel,
   Stack,
   TextField,
@@ -12,10 +13,12 @@ import { useDispatch } from "react-redux"
 import { departments, states } from "../../assets/lists.json"
 import { addEmployee } from "../../employeesSlice"
 
+import { useState } from "react"
 import styles from "./styles"
 
 const CreateEmployee = () => {
   const dispatch = useDispatch()
+  const [open, setOpen] = useState(false)
 
   const handleSubmit = (event) => {
     event.preventDefault()
@@ -32,10 +35,19 @@ const CreateEmployee = () => {
       zipCode: formData.get("zipCode"),
     }
     dispatch(addEmployee(newUser))
+    setOpen(true)
     event.target.reset()
   }
   return (
     <Stack sx={styles}>
+      <Dialog
+        open={open}
+        onClose={() => {
+          setOpen(false)
+        }}
+      >
+        Employee Created !
+      </Dialog>
       <Typography variant="h2">Create Employee</Typography>
       <Box className="form-container">
         <form onSubmit={handleSubmit}>

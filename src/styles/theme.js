@@ -54,6 +54,7 @@ const theme = createTheme({
         },
       },
     },
+
     MuiTextField: {
       styleOverrides: {
         root: {
@@ -74,6 +75,17 @@ const theme = createTheme({
           margin: "10px 0",
           backgroundColor: BACKGROUND_LIGHT,
           border: `1px solid ${GREEN_LIGHT}`,
+        },
+      },
+    },
+    MuiDialog: {
+      styleOverrides: {
+        paper: {
+          padding: "20px 50px",
+          backgroundColor: BACKGROUND_LIGHT,
+          border: "2px solid",
+          color: GREEN_TEXT,
+          fontWeight: "bolder",
         },
       },
     },

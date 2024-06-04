@@ -1,10 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit"
+import { users } from "./assets/lists.json"
 
 const getEmployeesListFromLocalStorage = () => {
   const employeesListFromStorage = JSON.parse(
     localStorage.getItem("employeesList")
   )
-  return employeesListFromStorage ?? []
+  return employeesListFromStorage ?? users
 }
 
 const initialStateOfEmployeesList = {
