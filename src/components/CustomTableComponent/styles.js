@@ -17,6 +17,7 @@ export const Wrapper = styled.div`
   font-family: inherit;
   color: inherit;
   position: relative;
+  height: auto;
 
   display: flex;
   flex-direction: row-reverse;
@@ -53,6 +54,7 @@ export const Wrapper = styled.div`
     font-size: 1rem;
     ${centeredXYtext};
     padding: ${(props) => props.styles?.buttonPadding || "10px"};
+    margin-bottom: 10px;
   }
   & .right {
     margin-left: auto;
@@ -76,16 +78,23 @@ export const Wrapper = styled.div`
   }
 `
 
-export const Table = styled.table`
-  width: 100%;
-  table-layout: fixed;
-  border-collapse: collapse;
-  margin: 20px 0;
-  border-top: 1px solid black;
-  border-bottom: 2px solid black;
+export const Table = styled.div`
+  height: auto;
+  & .bodyContainer {
+    height: ${(props) => props.height || "30vh"};
+    overflow-y: auto;
+  }
+  table {
+    width: 100%;
+    table-layout: fixed;
+    border-collapse: collapse;
+  }
 
   thead {
+    z-index: 1;
+    border-top: 1px solid black;
     border-bottom: 2px solid black;
+    background-color: #f2f2f2;
     & > tr > {
       &:not(:first-child) {
         border-left: 1px solid black;
@@ -99,6 +108,10 @@ export const Table = styled.table`
     &:nth-child(even) {
       background-color: #f2f2f2;
     }
+  }
+  tbody {
+    position: relative;
+    top: 20px;
   }
 `
 

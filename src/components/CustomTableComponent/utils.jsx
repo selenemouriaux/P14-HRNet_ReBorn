@@ -1,10 +1,26 @@
 import { orderBy } from "lodash"
 import { Cell } from "./styles"
 
-export const RenderDataRow = (dataRow, index, dataNames) => (
+const formatIfDate = (
+  value,
+  locale = "fr-FR",
+  options = {
+    // weekday: "long",
+    // year: "numeric",
+    // month: "long",
+    // day: "numeric",
+  }
+) => {
+  if (!(value instanceof Date)) return value
+  return new Intl.DateTimeFormat(locale, options).format(value)
+}
+
+export const RenderDataRow = (dataRow, index, dataNames, locale, options) => (
   <tr key={`line-${index}`}>
     {Object.values(dataRow).map((value, idx) => (
-      <Cell key={`${dataNames[idx]}-${index}`}>{value}</Cell>
+      <Cell key={`${dataNames[idx]}-${index}`}>
+        {formatIfDate(value, locale, options)}
+      </Cell>
     ))}
   </tr>
 )
@@ -33,6 +49,25 @@ export function sortingData(data, sort) {
       sort.map(({ type }) => type)
     )
   return data
+}
+
+const datePattern = /^\d{4}-\d{1,2}-\d{1,2}$|^\d{1,2}\/\d{1,2}\/\d{4}$/
+
+const isDate = (dateStr) => {
+  const date = new Date(dateStr)
+  return !isNaN(date) && datePattern.test(dateStr)
+}
+
+export function makeDatesGreatAgain(data) {
+  return data.map((item) => {
+    const newItem = { ...item }
+    Object.keys(newItem).forEach((key) => {
+      if (isDate(newItem[key])) {
+        newItem[key] = new Date(newItem[key])
+      }
+    })
+    return newItem
+  })
 }
 
 export function sortingIcon(name, sort) {}

@@ -8,14 +8,20 @@ import { Stack, Typography } from "@mui/material"
 import { useSelector } from "react-redux"
 import SivTable from "../CustomTableComponent"
 import styles from "./styles"
+import { useLocation } from "react-router-dom"
 
 const EmployeesList = () => {
   const employeesList = useSelector((state) => state.employeesList)
+
+  const location = useLocation()
+  const { state } = location
+  // console.log("remaining space = ", window.innerHeight - 320 - state.height)
   return (
     <>
       <Stack sx={styles}>
         <Typography variant="h2">Current Employees</Typography>
         <SivTable
+          height={`${window.innerHeight - 320 - state.height}px`}
           data={employeesList}
           columns={[
             { title: "First Name", name: "firstName", width: "120px" },
@@ -37,7 +43,7 @@ const EmployeesList = () => {
               name: "dateOfBirth",
               collapse: true,
               disappearanceOrder: 3,
-              disableSorting: true,
+              // disableSorting: true,
             },
             {
               title: "Street",

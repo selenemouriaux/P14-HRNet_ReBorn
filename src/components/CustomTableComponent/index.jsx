@@ -2,11 +2,17 @@ import PropTypes from "prop-types"
 // import expandIcon from "./icons/expand.png"
 import { useState } from "react"
 import resetIcon from "./icons/reset.svg"
+import settingsIcon from "./icons/settings.svg"
 import sortIcon from "./icons/sort-button.svg"
 import PaginationControls from "./paginationNav"
 import SearchBar from "./searhBar"
 import { ColumnTitle, Icon, Table, Wrapper } from "./styles"
-import { RenderDataRow, sortingData, updateSort } from "./utils"
+import {
+  RenderDataRow,
+  makeDatesGreatAgain,
+  sortingData,
+  updateSort,
+} from "./utils"
 
 /**
  * This component turns an array of data into an actual table. Customizable and responsive.
@@ -21,6 +27,7 @@ import { RenderDataRow, sortingData, updateSort } from "./utils"
  * @returns a table of the passed data following standard lib output or options passed
  */
 const SivTable = ({
+  height = "30vh",
   data = [],
   columns = Object.keys(data[0]) ?? null,
   styles = {
@@ -38,14 +45,18 @@ const SivTable = ({
   // darkMode = false,
   // detailComponent: DetailComponent,
 }) => {
-  const [newData, setNewData] = useState(data)
+  const [newData, setNewData] = useState(makeDatesGreatAgain(data))
   const [sort, setSort] = useState([])
   const [currentPage, setCurrentPage] = useState(1)
   const [infiniteScroll, setInfiniteScroll] = useState(false)
   const [itemsPerPage, setItemsPerPage] = useState(nbItemsPerPage)
+  const [settings, setSettings] = useState({ dateFormat: "" })
 
   const startIndex = (currentPage - 1) * itemsPerPage
-  const endIndex = startIndex + itemsPerPage
+  const endIndex =
+    startIndex + itemsPerPage <= newData.length
+      ? startIndex + itemsPerPage
+      : newData.length - (currentPage - 1) * itemsPerPage + startIndex
   const currentItems = newData.slice(startIndex, endIndex)
 
   const totalPages = Math.ceil(newData.length / itemsPerPage)
@@ -137,21 +148,30 @@ const SivTable = ({
           </div>
         )}
       </div>
-      <Table>
-        <thead>
-          <tr>
-            {tableHeading}
-            <th
-              onClick={() => resetSorting()}
-              key="expandIconsColumn"
-              width="50px"
-            >
-              <Icon src={resetIcon} />
-            </th>
-          </tr>
-        </thead>
-        <tbody>{tableContent}</tbody>
+      <Table height={height}>
+        <table>
+          <thead>
+            <tr>
+              {tableHeading}
+              <th
+                onClick={() => resetSorting()}
+                key="expandIconsColumn"
+                width="50px"
+              >
+                <Icon src={resetIcon} />
+              </th>
+            </tr>
+          </thead>
+        </table>
+        <div className="bodyContainer">
+          <table>
+            <tbody>{tableContent}</tbody>
+          </table>
+        </div>
       </Table>
+      <button>
+        <Icon src={settingsIcon} />
+      </button>
       <PaginationControls
         hide={infiniteScroll}
         currentPage={currentPage}
