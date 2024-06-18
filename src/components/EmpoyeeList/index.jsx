@@ -6,9 +6,9 @@ import { Stack, Typography } from "@mui/material"
 // import TableHead from "@mui/material/TableHead"
 // import TableRow from "@mui/material/TableRow"
 import { useSelector } from "react-redux"
+import { useLocation } from "react-router-dom"
 import SivTable from "../CustomTableComponent"
 import styles from "./styles"
-import { useLocation } from "react-router-dom"
 
 const EmployeesList = () => {
   const employeesList = useSelector((state) => state.employeesList)
@@ -21,7 +21,7 @@ const EmployeesList = () => {
       <Stack sx={styles}>
         <Typography variant="h2">Current Employees</Typography>
         <SivTable
-          height={`${window.innerHeight - 320 - state.height}px`}
+          height={`${window.innerHeight - 320 - state?.height}px`}
           data={employeesList}
           columns={[
             { title: "First Name", name: "firstName", width: "120px" },
@@ -72,6 +72,7 @@ const EmployeesList = () => {
             },
           ]}
           // nbItemsPerPage={15}
+          // noSearchBar
         />
         <br />
       </Stack>

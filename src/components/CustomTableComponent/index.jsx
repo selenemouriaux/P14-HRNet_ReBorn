@@ -27,7 +27,7 @@ import {
  * @returns a table of the passed data following standard lib output or options passed
  */
 const SivTable = ({
-  height = "30vh",
+  height,
   data = [],
   columns = Object.keys(data[0]) ?? null,
   styles = {
@@ -42,6 +42,7 @@ const SivTable = ({
   title = false,
   // footerExtra = () => {},
   nbItemsPerPage,
+  noSearchBar,
   // darkMode = false,
   // detailComponent: DetailComponent,
 }) => {
@@ -73,13 +74,13 @@ const SivTable = ({
     if (!disableSorting) {
       setCurrentPage(1)
       const sortedData = sortingData(newData, sort)
-      setNewData(sortedData)
+      setNewData(makeDatesGreatAgain(sortedData))
     }
   }
   const resetSorting = () => {
     setSort([])
     setCurrentPage(1)
-    setNewData(data)
+    setNewData(makeDatesGreatAgain(data))
   }
   // const collapsedColumns =
   // const sortIcon = sortingIcon(name, sort);
@@ -99,6 +100,8 @@ const SivTable = ({
         key={`header-${name}`}
         width={width}
         onClick={() => onClickSort(name, sort, disableSorting)}
+        $isMainCriterion={sort[0]?.name === name ?? false}
+        $isSecondCriterion={sort[1]?.name === name ?? false}
       >
         {title}
         {!disableSorting && <Icon src={sortIcon} size="1em" />}
@@ -122,13 +125,14 @@ const SivTable = ({
       )
     })
     setSort([])
-    setNewData(matchs)
+    setCurrentPage(1)
+    setNewData(makeDatesGreatAgain(matchs))
   }
 
   return (
     <Wrapper styles={styles}>
       {title && <div className="title">{title}</div>}
-      <SearchBar hide={infiniteScroll} onSearch={handleSearch} />
+      <SearchBar isHidden={noSearchBar} onSearch={handleSearch} />
       <div className="guide left">
         <button
           className={infiniteScroll ? "inactive" : "active"}
@@ -203,6 +207,8 @@ SivTable.propTypes = {
   nbItemsPerPage: PropTypes.number,
   darkMode: PropTypes.bool,
   detailComponent: PropTypes.element,
+  noSearchBar: PropTypes.bool,
+  height: PropTypes.string,
 }
 
 SivTable.defaultProps = {
@@ -219,6 +225,7 @@ SivTable.defaultProps = {
   nbItemsPerPage: 10,
   darkMode: false,
   detailComponent: null,
+  noSearchBar: false,
 }
 
 export default SivTable

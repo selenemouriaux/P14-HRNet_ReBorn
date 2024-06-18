@@ -1,3 +1,4 @@
+import { green } from "@mui/material/colors"
 import styled, { css } from "styled-components"
 
 const centeredXYtext = css`
@@ -76,6 +77,12 @@ export const Wrapper = styled.div`
     background-color: #5b7005;
     color: #d6e4dd;
   }
+  & .big {
+    padding: 10px;
+    border: 2px solid #d6e4dd;
+    border-radius: 10px;
+    font-size: bolder;
+  }
 `
 
 export const Table = styled.div`
@@ -119,6 +126,12 @@ export const ColumnTitle = styled.th`
   cursor: pointer;
   padding: 20px 10px;
   white-space: nowrap;
+  background-color: ${(props) =>
+    props.$isMainCriterion
+      ? "rgba(109, 133, 16, 0.5)"
+      : props.$isSecondCriterion
+      ? "rgba(147, 172, 24, 0.5)"
+      : "unset"};
   & > img {
     margin: auto;
     padding: 0 10px;

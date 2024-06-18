@@ -31,7 +31,7 @@ const SearchBar = ({
       handleSearch()
     }
   }
-  console.log(query)
+
   return (
     !isHidden && (
       <div className="guide right">
