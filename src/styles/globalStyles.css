@@ -1,0 +1,10 @@
+* {
+  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+  font-weight: 400;
+}
+
+a {
+  text-decoration: none;
+  color: #364303;
+  /* color: #d7e0b3; */
+}
