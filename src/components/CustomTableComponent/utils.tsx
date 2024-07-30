@@ -1,64 +1,47 @@
 import { orderBy } from "lodash"
-import { Cell } from "./styles"
+import { SivTableData, SortingOption } from "./types"
 
-const formatIfDate = (
-  value,
-  locale = "fr-FR",
-  options = {
-    // weekday: "long",
-    // year: "numeric",
-    // month: "long",
-    // day: "numeric",
-  }
-) => {
-  if (!(value instanceof Date)) return value
-  return new Intl.DateTimeFormat(locale, options).format(value)
-}
-
-export const RenderDataRow = (dataRow, index, dataNames, locale, options) => (
-  <tr key={`line-${index}`}>
-    {Object.values(dataRow).map((value, idx) => (
-      <Cell key={`${dataNames[idx]}-${index}`}>
-        {formatIfDate(value, locale, options)}
-      </Cell>
-    ))}
-  </tr>
-)
-
-export function updateSort(sort, name) {
-  let newSort = true
-  sort.map((obj) => {
+export function updateSort(
+  sortingOptions: SortingOption[],
+  name: string
+): SortingOption[] {
+  console.log(sortingOptions)
+  let newOption = true
+  sortingOptions.map((obj) => {
     if (obj.name === name) {
       obj.type = obj.type === "asc" ? "desc" : "asc"
-      newSort = false
+      newOption = false
     }
   })
-  if (newSort) {
-    sort.push({ name: name, type: "asc" })
-    sort = sort.slice(-2)
+  if (newOption) {
+    sortingOptions.push({ name: name, type: "asc" })
+    sortingOptions = sortingOptions.slice(-2)
   }
-  return sort
+  return sortingOptions
 }
 
-export function sortingData(data, sort) {
-  sort = sort.slice(-2)
+export function sortingData(
+  data: SivTableData[],
+  sortingOptions: SortingOption[]
+) {
+  sortingOptions = sortingOptions.slice(-2)
   if (data.length)
     return orderBy(
       data,
-      sort.map(({ name }) => name),
-      sort.map(({ type }) => type)
+      sortingOptions.map(({ name }) => name),
+      sortingOptions.map(({ type }) => type)
     )
   return data
 }
 
 const datePattern = /^\d{4}-\d{1,2}-\d{1,2}$|^\d{1,2}\/\d{1,2}\/\d{4}$/
 
-const isDate = (dateStr) => {
+const isDate = (dateStr: string): boolean => {
   const date = new Date(dateStr)
-  return !isNaN(date) && datePattern.test(dateStr)
+  return !Number.isNaN(date) && datePattern.test(dateStr)
 }
 
-export function makeDatesGreatAgain(data) {
+export function makeDatesGreatAgain(data: SivTableData[]) {
   return data.map((item) => {
     const newItem = { ...item }
     Object.keys(newItem).forEach((key) => {
@@ -70,4 +53,4 @@ export function makeDatesGreatAgain(data) {
   })
 }
 
-export function sortingIcon(name, sort) {}
+// export function sortingIcon(name, sort) {}

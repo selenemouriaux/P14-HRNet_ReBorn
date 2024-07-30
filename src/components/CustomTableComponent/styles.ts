@@ -1,4 +1,3 @@
-import { green } from "@mui/material/colors"
 import styled, { css } from "styled-components"
 
 const centeredXYtext = css`
@@ -8,7 +7,11 @@ const centeredXYtext = css`
   align-items: center;
   gap: 10px;
 `
-export const Icon = styled.img`
+
+interface IconProps {
+  size?: string
+}
+export const Icon = styled.img<IconProps>`
   width: ${(props) => props?.size || "20px"};
   height: ${(props) => props?.size || "20px"};
 `
@@ -85,7 +88,11 @@ export const Wrapper = styled.div`
   }
 `
 
-export const Table = styled.div`
+interface TableProps {
+  height?: string
+}
+
+export const Table = styled.div<TableProps>`
   height: auto;
   & .bodyContainer {
     height: ${(props) => props.height || "30vh"};
@@ -122,7 +129,13 @@ export const Table = styled.div`
   }
 `
 
-export const ColumnTitle = styled.th`
+interface ColumnTitleProps {
+  $isMainCriterion?: boolean
+  $isSecondCriterion?: boolean
+  width?: string
+}
+
+export const ColumnTitle = styled.th<ColumnTitleProps>`
   cursor: pointer;
   padding: 20px 10px;
   white-space: nowrap;

@@ -4,14 +4,15 @@ import resetIcon from "./icons/reset.svg"
 import settingsIcon from "./icons/settings.svg"
 import sortIcon from "./icons/sort-button.svg"
 import PaginationControls from "./paginationNav"
-import SearchBar from "./searhBar"
+import RenderDataRow from "./RenderDataRow.tsx"
+import SearchBar from "./searchBar"
 import { ColumnTitle, Icon, Table, Wrapper } from "./styles"
-import {
-  RenderDataRow,
-  makeDatesGreatAgain,
-  sortingData,
-  updateSort,
-} from "./utils.tsx"
+import { SivTableProps, SortingOption } from "./types.ts"
+import { makeDatesGreatAgain, sortingData, updateSort } from "./utils.tsx"
+
+// footerExtra = () => {},
+// darkMode = false,
+// detailComponent: DetailComponent,
 
 /**
  * This component turns an array of data into an actual table. Customizable and responsive.
@@ -27,30 +28,18 @@ import {
  */
 const SivTable = ({
   height,
-  data = [],
-  columns = Object.keys(data[0]) ?? null,
-  styles = {
-    colorDark: "#8d1313",
-    contrast: "#541372",
-    colorLight: "#fff",
-    backgroundGrid: "#dcbdee",
-    backgroundHeading: "#9466af",
-    backgroundButtons: "#edf0ce",
-    title: {},
-  },
-  title = false,
-  // footerExtra = () => {},
-  nbItemsPerPage,
-  noSearchBar,
-  // darkMode = false,
-  // detailComponent: DetailComponent,
-}) => {
+  data,
+  columns = Object.keys(data[0]).map((key) => ({ name: key })),
+  title,
+  nbItemsPerPage = 10,
+  noSearchBar = false,
+}: SivTableProps) => {
   const [newData, setNewData] = useState(makeDatesGreatAgain(data))
-  const [sort, setSort] = useState([])
+  const [sortingOptions, setSortingOptions] = useState<SortingOption[]>([])
   const [currentPage, setCurrentPage] = useState(1)
   const [infiniteScroll, setInfiniteScroll] = useState(false)
   const [itemsPerPage, setItemsPerPage] = useState(nbItemsPerPage)
-  const [settings, setSettings] = useState({ dateFormat: "" })
+  // const [settings, setSettings] = useState({ dateFormat: "" })
 
   const startIndex = (currentPage - 1) * itemsPerPage
   const endIndex =
@@ -62,14 +51,20 @@ const SivTable = ({
   const totalPages = Math.ceil(newData.length / itemsPerPage)
 
   // const [sortingIcon, setSortingIcon] = useState(sortIcon)
-  const hasDetailsComponent = columns.some((column) => column.collapse === true)
+
+  // const hasDetailsComponent = columns.some((column) => column.collapse === true)
+
   // const collapsingOrder = columns
   //   .filter((col) => col.collapse)
   //   .sort((a, b) => a.disappearanceOrder - b.disappearanceOrder)
   //   .map((col) => columns.indexOf(col))
 
-  const onClickSort = (name, sort, disableSorting) => {
-    setSort(updateSort(sort, name))
+  const onClickSort = (
+    name: string,
+    sort: SortingOption[],
+    disableSorting: boolean
+  ) => {
+    setSortingOptions(updateSort(sort, name))
     if (!disableSorting) {
       setCurrentPage(1)
       const sortedData = sortingData(newData, sort)
@@ -77,7 +72,7 @@ const SivTable = ({
     }
   }
   const resetSorting = () => {
-    setSort([])
+    setSortingOptions([])
     setCurrentPage(1)
     setNewData(makeDatesGreatAgain(data))
   }
@@ -98,38 +93,43 @@ const SivTable = ({
         id={`header-${name}`}
         key={`header-${name}`}
         width={width}
-        onClick={() => onClickSort(name, sort, disableSorting)}
-        $isMainCriterion={sort[0]?.name === name ?? false}
-        $isSecondCriterion={sort[1]?.name === name ?? false}
+        onClick={() =>
+          onClickSort(name, sortingOptions, (disableSorting = false))
+        }
+        $isMainCriterion={sortingOptions[0]?.name === name ?? false}
+        $isSecondCriterion={sortingOptions[1]?.name === name ?? false}
       >
-        {title}
+        {title || name}
         {!disableSorting && <Icon src={sortIcon} size="1em" />}
       </ColumnTitle>
     )
   )
+
+  // console.log("data", data)
+  // console.log("newData", newData)
 
   const tableContent = (infiniteScroll ? newData : currentItems).map(
     (rowData, index) =>
       RenderDataRow(
         rowData,
         index,
-        columns.map((col) => col.name)
+        columns.map((col) => col.name).filter((name) => name !== undefined)
       )
   )
 
-  const handleSearch = (query) => {
+  const handleSearch = (query: string) => {
     const matchs = data.filter((item) => {
       return Object.values(item).some((value) =>
         String(value).toLowerCase().includes(query.toLowerCase())
       )
     })
-    setSort([])
+    setSortingOptions([])
     setCurrentPage(1)
     setNewData(makeDatesGreatAgain(matchs))
   }
 
   return (
-    <Wrapper styles={styles}>
+    <Wrapper>
       {title && <div className="title">{title}</div>}
       <SearchBar isHidden={noSearchBar} onSearch={handleSearch} />
       <div className="guide left">
@@ -159,7 +159,7 @@ const SivTable = ({
               <th
                 onClick={() => resetSorting()}
                 key="expandIconsColumn"
-                width="50px"
+                // width="50px"
               >
                 <Icon src={resetIcon} />
               </th>

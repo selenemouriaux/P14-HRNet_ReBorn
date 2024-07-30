@@ -9,9 +9,10 @@ import { useSelector } from "react-redux"
 import { useLocation } from "react-router-dom"
 import SivTable from "../CustomTableComponent"
 import styles from "./styles"
+import { RootState } from "../../store"
 
 const EmployeesList = () => {
-  const employeesList = useSelector((state) => state.employeesList)
+  const employeesList = useSelector((state: RootState) => state.employeesList)
 
   const location = useLocation()
   const { state } = location
@@ -73,6 +74,7 @@ const EmployeesList = () => {
           ]}
           // nbItemsPerPage={15}
           // noSearchBar
+          // title="TITRE !"
         />
         <br />
       </Stack>

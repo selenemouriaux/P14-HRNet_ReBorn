@@ -11,7 +11,7 @@ import {
 import { DatePicker } from "@mui/x-date-pickers"
 import { useDispatch } from "react-redux"
 import { departments, states } from "../../assets/lists.json"
-import { addEmployee } from "../../employeesSlice.ts"
+import { addEmployee } from "../../employeesSlice"
 
 import { useState } from "react"
 import styles from "./styles"
@@ -20,9 +20,9 @@ const CreateEmployee = () => {
   const dispatch = useDispatch()
   const [open, setOpen] = useState(false)
 
-  const handleSubmit = (event) => {
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
-    const formData = new FormData(event.target)
+    const formData = new FormData(event.currentTarget)
     const newUser = {
       firstName: formData.get("firstName"),
       lastName: formData.get("lastName"),
@@ -36,7 +36,7 @@ const CreateEmployee = () => {
     }
     dispatch(addEmployee(newUser))
     setOpen(true)
-    event.target.reset()
+    event.currentTarget.reset()
   }
   return (
     <Stack sx={styles}>
