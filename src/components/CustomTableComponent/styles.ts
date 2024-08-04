@@ -75,6 +75,7 @@ export const Wrapper = styled.div`
   }
   & .searchButton {
     height: 34px;
+    display: "block";
   }
   & .active {
     background-color: #5b7005;

@@ -4,12 +4,19 @@ import toFirstIcon from "./icons/toFirst.svg"
 import toLastIcon from "./icons/toLast.svg"
 import { Icon } from "./styles"
 
+type PaginationControlProps = {
+  currentPage: number
+  totalPages: number
+  setCurrentPage: (page: number) => void
+  hide: boolean
+}
+
 const PaginationControls = ({
   currentPage,
   totalPages,
   setCurrentPage,
   hide,
-}) => {
+}: PaginationControlProps) => {
   if (hide) return
   return (
     <div className="guide right">
@@ -31,7 +38,7 @@ const PaginationControls = ({
         <button
           key={index}
           onClick={() => setCurrentPage(index + 1)}
-          className={currentPage === index + 1 ? "active big" : null}
+          className={currentPage === index + 1 ? "active big" : undefined}
         >
           {index + 1}
         </button>

@@ -1,3 +1,5 @@
+import { ComponentPropsWithoutRef } from "react"
+
 export type SivTableData = {
   firstName?: string
   lastName?: string
@@ -7,7 +9,7 @@ export type SivTableData = {
   street?: string
   city?: string
   state?: string
-  zipCode?: string
+  zipCode?: number
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [key: string]: any
 }
@@ -39,3 +41,5 @@ export type SortingOption = {
   name: string
   type: "asc" | "desc"
 }
+
+export type MyButton = ComponentPropsWithoutRef<"button">

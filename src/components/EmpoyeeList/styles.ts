@@ -1,4 +1,4 @@
-import { GREEN_DARK, GREEN_LIGHT } from "../../styles/constants";
+import { Theme } from "@mui/material/styles"
 
-const styles = (theme) => ({});
-export default styles;
+const styles = (theme: Theme) => ({})
+export default styles

@@ -30,6 +30,7 @@ const SivTable = ({
   height,
   data,
   columns = Object.keys(data[0]).map((key) => ({ name: key })),
+  // columns = Object.keys(data[0]).map((key) => ({ name: key })),
   title,
   nbItemsPerPage = 10,
   noSearchBar = false,

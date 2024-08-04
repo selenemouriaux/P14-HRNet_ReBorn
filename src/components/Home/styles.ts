@@ -1,4 +1,6 @@
-const styles = (theme) => ({
+import { Theme } from "@mui/material/styles"
+
+const styles = (theme: Theme) => ({
   alignItems: "center",
   ".nav-box": {
     width: "100%",

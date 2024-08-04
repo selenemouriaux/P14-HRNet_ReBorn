@@ -1,18 +1,18 @@
 import HomeIcon from "@mui/icons-material/Home"
 import PersonAddAlt1Icon from "@mui/icons-material/PersonAddAlt1"
 import { Box, Button, Stack, Typography } from "@mui/material"
+import { useEffect, useRef, useState } from "react"
 import { NavLink, Outlet, useLocation } from "react-router-dom"
 import styles from "./styles"
-import { useEffect, useRef, useState } from "react"
 
 const Home = () => {
   const location = useLocation()
-  const [elementHeight, setElementHeight] = useState(0)
-  const headerRef = useRef(null)
+  const [elementHeight, setElementHeight] = useState<number>(0)
+  const headerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     if (headerRef.current) setElementHeight(headerRef.current.offsetHeight)
-  })
+  }, [])
 
   return (
     <>

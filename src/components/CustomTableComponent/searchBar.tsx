@@ -1,7 +1,16 @@
-import { useState } from "react"
+import { ChangeEvent, KeyboardEvent, useState } from "react"
 import searchIcon from "./icons/search.svg"
 import deleteIcon from "./icons/trash.svg"
 import { Icon } from "./styles"
+
+type SearchBarProps = {
+  onSearch: (query: string) => void
+  isHidden?: boolean
+  active?: boolean
+  searchOnEnter?: boolean
+  autoSearchAfter?: number
+  searchOnlyFilteredColumns?: boolean
+}
 
 const SearchBar = ({
   onSearch,
@@ -10,10 +19,11 @@ const SearchBar = ({
   searchOnEnter = false,
   autoSearchAfter = 3,
   searchOnlyFilteredColumns = false,
-}) => {
-  const [query, setQuery] = useState("")
-  const [toggleIcon, setToggleIcon] = useState(true)
-  const handleInputChange = (event) => {
+}: SearchBarProps) => {
+  const [query, setQuery] = useState<string>("")
+  const [toggleIcon, setToggleIcon] = useState<boolean>(true)
+
+  const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     setQuery(event.target.value)
     setToggleIcon(true)
   }
@@ -26,7 +36,7 @@ const SearchBar = ({
     onSearch("")
     setToggleIcon(!toggleIcon)
   }
-  const handleKeyPress = (event) => {
+  const handleKeyPress = (event: KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter") {
       handleSearch()
     }
