@@ -1,4 +1,4 @@
-import { ComponentPropsWithoutRef } from "react"
+import React, { ComponentPropsWithoutRef } from "react"
 
 export type SivTableData = {
   firstName?: string
@@ -26,14 +26,15 @@ export type Column = {
   collapse?: boolean
   disappearanceOrder?: number
   disableSorting?: boolean
+  titleStyle?: React.CSSProperties
+  columnStyle?: React.CSSProperties
 }
 
 export type SivTableProps = {
-  height?: string
+  height: string
   data: SivTableData[]
   columns?: Column[]
   title?: string
-  nbItemsPerPage?: number
   noSearchBar?: boolean
 }
 
@@ -43,3 +44,20 @@ export type SortingOption = {
 }
 
 export type MyButton = ComponentPropsWithoutRef<"button">
+
+export type MinWidthProps = {
+  text?: string
+  fontfamily: string
+  fontSize: number
+  padding: number
+  iconWidth: number
+  fixedWidth: string
+}
+
+export type MinHeightProps = {
+  fontfamily: string
+  fontSize: number
+  padding: number
+  offset: number
+  availableHeight: string
+}

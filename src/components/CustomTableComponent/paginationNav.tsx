@@ -17,7 +17,33 @@ const PaginationControls = ({
   setCurrentPage,
   hide,
 }: PaginationControlProps) => {
-  if (hide) return
+  if (hide) return null
+
+  const getPageNumbers = () => {
+    const pages = []
+    const maxPagesToShow = 5
+    let startPage = Math.max(currentPage - 2, 1)
+    let endPage = Math.min(currentPage + 2, totalPages)
+
+    if (currentPage - 2 <= 0) {
+      endPage = Math.min(maxPagesToShow, totalPages)
+    }
+
+    if (currentPage + 2 > totalPages) {
+      startPage = Math.max(totalPages - maxPagesToShow + 1, 1)
+    }
+
+    for (let i = startPage; i <= endPage; i++) {
+      pages.push(i)
+    }
+
+    return pages
+  }
+
+  const pageNumbers = getPageNumbers()
+  const showLeftEllipsis = pageNumbers[0] > 1
+  const showRightEllipsis = pageNumbers[pageNumbers.length - 1] < totalPages
+
   return (
     <div className="guide right">
       <button
@@ -34,15 +60,17 @@ const PaginationControls = ({
       >
         <Icon src={prevIcon} />
       </button>
-      {Array.from({ length: totalPages }, (_, index) => (
+      {showLeftEllipsis && <span className="ellipsis">...</span>}
+      {pageNumbers.map((pageNumber) => (
         <button
-          key={index}
-          onClick={() => setCurrentPage(index + 1)}
-          className={currentPage === index + 1 ? "active big" : undefined}
+          key={pageNumber}
+          onClick={() => setCurrentPage(pageNumber)}
+          className={currentPage === pageNumber ? "active big" : undefined}
         >
-          {index + 1}
+          {pageNumber}
         </button>
       ))}
+      {showRightEllipsis && <span className="ellipsis">...</span>}
       <button
         onClick={() =>
           setCurrentPage(currentPage >= totalPages ? 1 : currentPage + 1)

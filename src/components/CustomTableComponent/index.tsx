@@ -1,14 +1,22 @@
 // import expandIcon from "./icons/expand.png"
-import { useState } from "react"
+import { useLayoutEffect, useState } from "react"
+import { ICON_WIDTH } from "./constants.ts"
 import resetIcon from "./icons/reset.svg"
 import settingsIcon from "./icons/settings.svg"
 import sortIcon from "./icons/sort-button.svg"
 import PaginationControls from "./paginationNav"
 import RenderDataRow from "./RenderDataRow.tsx"
 import SearchBar from "./searchBar"
-import { ColumnTitle, Icon, Table, Wrapper } from "./styles"
+import { ColumnTitle, Icon, SubTable, Table, Wrapper } from "./styles"
 import { SivTableProps, SortingOption } from "./types.ts"
-import { makeDatesGreatAgain, sortingData, updateSort } from "./utils.tsx"
+import {
+  getMinWidth,
+  getPaginationItemsNbByHeight,
+  getSizedReducedByScrollBarWidth,
+  makeDatesGreatAgain,
+  sortingData,
+  updateSort,
+} from "./utils.ts"
 
 // footerExtra = () => {},
 // darkMode = false,
@@ -27,20 +35,28 @@ import { makeDatesGreatAgain, sortingData, updateSort } from "./utils.tsx"
  * @returns a table of the passed data following standard lib output or options passed
  */
 const SivTable = ({
-  height,
+  height = "100px",
   data,
   columns = Object.keys(data[0]).map((key) => ({ name: key })),
   // columns = Object.keys(data[0]).map((key) => ({ name: key })),
   title,
-  nbItemsPerPage = 10,
   noSearchBar = false,
 }: SivTableProps) => {
   const [newData, setNewData] = useState(makeDatesGreatAgain(data))
   const [sortingOptions, setSortingOptions] = useState<SortingOption[]>([])
   const [currentPage, setCurrentPage] = useState(1)
   const [infiniteScroll, setInfiniteScroll] = useState(false)
-  const [itemsPerPage, setItemsPerPage] = useState(nbItemsPerPage)
+  const [itemsPerPage, setItemsPerPage] = useState<number>(5)
   // const [settings, setSettings] = useState({ dateFormat: "" })
+  const [adaptativeHeadingWidth, setAdaptativeHeadingWidth] = useState("")
+  const [query, setQuery] = useState<string>("")
+
+  useLayoutEffect(() => {
+    setAdaptativeHeadingWidth(getSizedReducedByScrollBarWidth("titleTable"))
+    setItemsPerPage(
+      getPaginationItemsNbByHeight({ availableHeight: height, offset: 130 })
+    )
+  }, [])
 
   const startIndex = (currentPage - 1) * itemsPerPage
   const endIndex =
@@ -93,7 +109,11 @@ const SivTable = ({
       <ColumnTitle
         id={`header-${name}`}
         key={`header-${name}`}
-        width={width}
+        width={getMinWidth({
+          text: title,
+          iconWidth: disableSorting ? 0 : ICON_WIDTH,
+          fixedWidth: width,
+        })}
         onClick={() =>
           onClickSort(name, sortingOptions, (disableSorting = false))
         }
@@ -106,16 +126,28 @@ const SivTable = ({
     )
   )
 
-  // console.log("data", data)
-  // console.log("newData", newData)
+  const headersWidthReport = columns.map(({ title, width, disableSorting }) => (
+    <ColumnTitle
+      width={getMinWidth({
+        text: title,
+        iconWidth: disableSorting ? 0 : ICON_WIDTH,
+        fixedWidth: width,
+      })}
+    >
+      sizing..
+    </ColumnTitle>
+  ))
 
   const tableContent = (infiniteScroll ? newData : currentItems).map(
     (rowData, index) =>
-      RenderDataRow(
-        rowData,
+      RenderDataRow({
+        dataRow: rowData,
         index,
-        columns.map((col) => col.name).filter((name) => name !== undefined)
-      )
+        dataNames: columns
+          .map((col) => col.name)
+          .filter((name) => name !== undefined),
+        query,
+      })
   )
 
   const handleSearch = (query: string) => {
@@ -132,45 +164,48 @@ const SivTable = ({
   return (
     <Wrapper>
       {title && <div className="title">{title}</div>}
-      <SearchBar isHidden={noSearchBar} onSearch={handleSearch} />
+      <SearchBar
+        isHidden={noSearchBar}
+        onSearch={handleSearch}
+        query={query}
+        setQuery={setQuery}
+      />
       <div className="guide left">
         <button
-          className={infiniteScroll ? "inactive" : "active"}
+          className={infiniteScroll ? "active" : "inactive"}
           onClick={() => setInfiniteScroll(!infiniteScroll)}
         >
-          Pagination
+          Switch to {infiniteScroll ? "Pagination" : "full list"}
         </button>
-        {!infiniteScroll && (
-          <div>
-            Showing{" "}
-            <input
-              value={itemsPerPage}
-              type="number"
-              onChange={(event) => setItemsPerPage(Number(event.target.value))}
-            />{" "}
-            items per page
-          </div>
-        )}
       </div>
       <Table height={height}>
-        <table>
+        <SubTable
+          id="titleTable"
+          width={infiniteScroll ? adaptativeHeadingWidth : "100%"}
+        >
           <thead>
             <tr>
               {tableHeading}
               <th
                 onClick={() => resetSorting()}
                 key="expandIconsColumn"
-                // width="50px"
+                width="50px"
               >
                 <Icon src={resetIcon} />
               </th>
             </tr>
           </thead>
-        </table>
+        </SubTable>
         <div className="bodyContainer">
-          <table>
+          <SubTable width="100%">
+            <thead className="sizer">
+              <tr>
+                {headersWidthReport}
+                <th width="50px">sizing..</th>
+              </tr>
+            </thead>
             <tbody>{tableContent}</tbody>
-          </table>
+          </SubTable>
         </div>
       </Table>
       <button>
@@ -184,7 +219,7 @@ const SivTable = ({
       />
       {!infiniteScroll && totalPages > 1 && (
         <div className="guide left">
-          Entries {startIndex + 1} to {endIndex} of {newData.length} in total
+          Entries {startIndex + 1} to {endIndex} over {totalPages} pages
         </div>
       )}
     </Wrapper>

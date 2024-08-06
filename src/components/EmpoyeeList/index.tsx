@@ -22,7 +22,7 @@ const EmployeesList = () => {
       <Stack sx={styles}>
         <Typography variant="h2">Current Employees</Typography>
         <SivTable
-          height={`${window.innerHeight - 320 - state?.height}px`}
+          height={`${window.innerHeight - 500 - state?.height}px`}
           data={employeesList}
           columns={[
             { title: "First Name", name: "firstName", width: "120px" },
@@ -31,6 +31,7 @@ const EmployeesList = () => {
               name: "lastName",
               width: "150px",
               isReference: true,
+              // disableSorting: true,
             },
             {
               title: "Start Date",
@@ -64,6 +65,7 @@ const EmployeesList = () => {
               name: "state",
               collapse: true,
               disappearanceOrder: 6,
+              // disableSorting: true,
             },
             {
               title: "Zip Code",

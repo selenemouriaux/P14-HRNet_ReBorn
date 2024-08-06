@@ -92,19 +92,24 @@ export const Wrapper = styled.div`
 interface TableProps {
   height?: string
 }
+interface SubTableProps {
+  width?: string
+}
+
+export const SubTable = styled.table<SubTableProps>`
+  table-layout: auto;
+  border-collapse: collapse;
+  width: ${(props) => props.width};
+`
 
 export const Table = styled.div<TableProps>`
   height: auto;
+  width: 100%;
   & .bodyContainer {
     height: ${(props) => props.height || "30vh"};
     overflow-y: auto;
   }
-  table {
-    width: 100%;
-    table-layout: fixed;
-    border-collapse: collapse;
-  }
-
+  ${SubTable}
   thead {
     z-index: 1;
     border-top: 1px solid black;
@@ -114,6 +119,10 @@ export const Table = styled.div<TableProps>`
       &:not(:first-child) {
         border-left: 1px solid black;
       }
+    }
+    &.sizer {
+      visibility: collapse;
+      border: none;
     }
   }
   tr {
@@ -137,6 +146,7 @@ interface ColumnTitleProps {
 }
 
 export const ColumnTitle = styled.th<ColumnTitleProps>`
+  width: ${(props) => props.width};
   cursor: pointer;
   padding: 20px 10px;
   white-space: nowrap;
@@ -151,6 +161,10 @@ export const ColumnTitle = styled.th<ColumnTitleProps>`
     padding: 0 10px;
   }
 `
-export const Cell = styled.td`
+
+interface CellProps {
+  width?: string
+}
+export const Cell = styled.td<CellProps>`
   padding: 6px 10px;
 `

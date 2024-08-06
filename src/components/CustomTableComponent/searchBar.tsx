@@ -10,6 +10,8 @@ type SearchBarProps = {
   searchOnEnter?: boolean
   autoSearchAfter?: number
   searchOnlyFilteredColumns?: boolean
+  query?: string
+  setQuery?: (query: string) => void
 }
 
 const SearchBar = ({
@@ -19,8 +21,10 @@ const SearchBar = ({
   searchOnEnter = false,
   autoSearchAfter = 3,
   searchOnlyFilteredColumns = false,
+  query,
+  setQuery,
 }: SearchBarProps) => {
-  const [query, setQuery] = useState<string>("")
+  // const [query, setQuery] = useState<string>("")
   const [toggleIcon, setToggleIcon] = useState<boolean>(true)
 
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
